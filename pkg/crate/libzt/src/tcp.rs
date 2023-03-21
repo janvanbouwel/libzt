@@ -37,10 +37,7 @@ impl TcpStreamImpl {
         //let (addrp, len) = addr.into_inner();
         unsafe {
             // TODO: Find a better way to split this address string
-            let full_str = addr.to_string();
-            let full_vec = full_str.split(":");
-            let lvec: Vec<&str> = full_vec.collect();
-            let addr_str = lvec[0];
+            let addr_str = addr.ip().to_string();
             let port = addr.port();
             let timeout_ms = 0;
             // TODO: Handle native error code, consider cvt?
