@@ -1,3 +1,4 @@
-libzt
 id
 
+!dist/
+!libzt.a
