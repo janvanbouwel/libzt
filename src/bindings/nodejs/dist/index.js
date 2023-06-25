@@ -14,7 +14,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.init = void 0;
+exports.udp = exports.init = void 0;
 var zts_1 = require("./zts");
 function init(path) {
     zts_1.zts.init_from_storage(path);
@@ -25,3 +25,4 @@ exports.init = init;
 __exportStar(require("./zts"), exports);
 __exportStar(require("./Socket"), exports);
 __exportStar(require("./Server"), exports);
+exports.udp = require("./UDPSocket");
