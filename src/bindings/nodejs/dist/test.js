@@ -41,16 +41,18 @@ var index_1 = require("./index");
 var Server_1 = require("./Server");
 var Socket_1 = require("./Socket");
 var zts_1 = require("./zts");
+var UDPSocket_1 = require("./UDPSocket");
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var server, port, host, nwid, server_1, s_1, i_1;
+        var protocol, server, port, host, nwid, s_1, s, msg, server_1, s_2, i_1;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    server = process.argv[2] === "server";
-                    port = parseInt(process.argv[3]);
-                    host = process.argv[4];
+                    protocol = process.argv[2];
+                    server = process.argv[3] === "server";
+                    port = parseInt(process.argv[4]);
+                    host = process.argv[5];
                     (0, index_1.init)("id/" + (server ? "server" : "client"));
                     _a.label = 1;
                 case 1:
@@ -84,48 +86,83 @@ function main() {
                     catch (error) {
                         console.log(error.toString());
                     }
-                    if (server) {
-                        console.log("starting server");
-                        server_1 = new Server_1.Server({}, function (socket) {
-                            console.log("new connection ".concat(socket.remoteAddress));
-                            socket.on("data", function (data) {
-                                console.log("".concat(data));
-                                socket.write(data);
+                    if (!(protocol === "udp")) return [3 /*break*/, 11];
+                    if (!server) return [3 /*break*/, 7];
+                    s_1 = (0, UDPSocket_1.createSocket)({ type: "udp6" }, function (msg, rinfo) {
+                        console.log("".concat(msg));
+                        console.log(rinfo);
+                        s_1.send(msg, rinfo.port, rinfo.address);
+                    });
+                    s_1.bind(port);
+                    console.log(s_1.address());
+                    return [3 /*break*/, 10];
+                case 7:
+                    s = (0, UDPSocket_1.createSocket)({ type: "udp6" }, function (msg, rinfo) {
+                        console.log("".concat(msg));
+                        console.log(rinfo);
+                    });
+                    s.on("error", function (err) {
+                        console.log(err);
+                    });
+                    s.bind(port);
+                    console.log(s.address());
+                    _a.label = 8;
+                case 8:
+                    if (!true) return [3 /*break*/, 10];
+                    console.log("sending");
+                    msg = Buffer.from("abcdefg");
+                    s.send(msg, port, host, function () { return console.log("sent"); });
+                    return [4 /*yield*/, (0, promises_1.setTimeout)(1000)];
+                case 9:
+                    _a.sent();
+                    return [3 /*break*/, 8];
+                case 10: return [3 /*break*/, 12];
+                case 11:
+                    if (protocol === "tcp") {
+                        if (server) {
+                            console.log("starting server");
+                            server_1 = new Server_1.Server({}, function (socket) {
+                                console.log("new connection ".concat(socket.remoteAddress));
+                                socket.on("data", function (data) {
+                                    console.log("".concat(data));
+                                    socket.write(data);
+                                });
+                                socket.on("error", function () { return console.log("error"); });
                             });
-                            socket.on("error", function () { return console.log("error"); });
-                        });
-                        server_1.listen(port, "::", function () {
-                            console.log(server_1.address());
-                            console.log("listening");
-                        });
-                        server_1.on("error", function (err) { return console.log(err); });
-                    }
-                    else {
-                        s_1 = (0, Socket_1.connect)(host, port);
-                        i_1 = 0;
-                        // s.setTimeout(1000);
-                        s_1.on("connect", function () {
-                            console.log("connected");
-                            s_1.write(Buffer.from("ping" + i_1));
-                            i_1++;
-                        });
-                        s_1.on("data", function (data) { return __awaiter(_this, void 0, void 0, function () {
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0:
-                                        console.log("".concat(data));
-                                        return [4 /*yield*/, (0, promises_1.setTimeout)(100)];
-                                    case 1:
-                                        _a.sent();
-                                        s_1.write(Buffer.from("ping" + i_1));
-                                        i_1++;
-                                        return [2 /*return*/];
-                                }
+                            server_1.listen(port, "::", function () {
+                                console.log(server_1.address());
+                                console.log("listening");
                             });
-                        }); });
-                        s_1.on("error", function (err) { return console.log(err); });
+                            server_1.on("error", function (err) { return console.log(err); });
+                        }
+                        else {
+                            s_2 = (0, Socket_1.connect)(host, port);
+                            i_1 = 0;
+                            // s.setTimeout(1000);
+                            s_2.on("connect", function () {
+                                console.log("connected");
+                                s_2.write(Buffer.from("ping" + i_1));
+                                i_1++;
+                            });
+                            s_2.on("data", function (data) { return __awaiter(_this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            console.log("".concat(data));
+                                            return [4 /*yield*/, (0, promises_1.setTimeout)(100)];
+                                        case 1:
+                                            _a.sent();
+                                            s_2.write(Buffer.from("ping" + i_1));
+                                            i_1++;
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            }); });
+                            s_2.on("error", function (err) { return console.log(err); });
+                        }
                     }
-                    return [2 /*return*/];
+                    _a.label = 12;
+                case 12: return [2 /*return*/];
             }
         });
     });
