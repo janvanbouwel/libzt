@@ -90,6 +90,7 @@ include_directories(${ZTO_SRC_DIR}/osdep)
 # ZeroTier (ext)
 #include_directories(${ZTO_SRC_DIR}/ext/miniupnpc)
 include_directories(${ZTO_SRC_DIR}/ext/libnatpmp)
+include_directories(${ZTO_SRC_DIR}/ext/nlohmann)
 include_directories(${ZTO_SRC_DIR}/ext/prometheus-cpp-lite-1.0/core/include)
 include_directories(${ZTO_SRC_DIR}/ext/prometheus-cpp-lite-1.0/simpleapi/include)
 # libzt
