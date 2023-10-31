@@ -1,24 +1,35 @@
 name: Build Java JAR
 
-on: [workflow_dispatch]
+on: [ workflow_dispatch ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Checkout submodules
-      run: git submodule update --init
+      - name: Checkout submodules
+        run: git submodule update --init
 
-    - name: Install JDK
-      run: sudo apt install default-jdk
+      - name: Setup Chocolatey Cache
+        uses: actions/cache@v3
+        with:
+          path: C:\Users\runneradmin\AppData\Local\Temp\chocolatey
+          key: ${{ runner.os }}-chocolatey-${{ matrix.os }}-${{ hashFiles('**/lockfiles') }}
+          restore-keys: |
+            ${{ runner.os }}-chocolatey-${{ matrix.os }}-
+            ${{ runner.os }}-chocolatey-
 
-    - name: Build
-      run: ./build.sh host-jar "release"
+      - name: Install Build Tools
+        run: |
+          choco config set --name cacheLocation --value C:\Users\runneradmin\AppData\Local\Temp\chocolatey
+          choco install --no-progress temurin11
+          choco install --no-progress visualstudio2019buildtools --params "--passive --wait --add Microsoft.VisualStudio.Workload.MSBuildTools --add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.Windows10SDK --add Microsoft.VisualStudio.Component.VC.CMake.Project --add Microsoft.VisualStudio.Component.TestTools.BuildTools --add Microsoft.VisualStudio.Component.VC.ASAN --add Microsoft.VisualStudio.Component.VC.140 --add Microsoft.VisualStudio.Component.WinXP"
 
-    - uses: actions/upload-artifact@v2
-      with:
-        path: dist
+      - name: Build
+        run: . .\build.ps1; Build-Library -BuildType "Release" -Arch "x64" -LangBinding "java"
 
+      - uses: actions/upload-artifact@v2
+        with:
+          path: dist
