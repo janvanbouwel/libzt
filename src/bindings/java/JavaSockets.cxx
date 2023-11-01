@@ -389,7 +389,15 @@ void ss2zta(JNIEnv* env, struct zts_sockaddr_storage* ss, jobject addr)
         jobject ipData = env->GetObjectField(addr, fid);
         jbyteArray* arr = reinterpret_cast<jbyteArray*>(&ipData);
         char* data = (char*)env->GetByteArrayElements(*arr, NULL);
-        memcpy(data, &(in4->sin_addr.s_addr), 4);
+
+#if defined(_WIN32)
+    memcpy(data, &(in4->sin_addr.S_addr), 4);
+#else
+    memcpy(data, &(in4->sin_addr.s_addr), 4);
+#endif
+        
+        
+        
         env->ReleaseByteArrayElements(*arr, (jbyte*)data, 0);
 
         return;
