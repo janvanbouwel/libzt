@@ -41,8 +41,6 @@ jobs:
           - os: ubuntu-latest
             arch: x64
             is-native: true
-            docker-arch: linux/amd64
-            docker-image: node:18-buster
           # # linux-libc
           # - os: ubuntu-latest
           #   arch: arm64
@@ -79,13 +77,13 @@ jobs:
         shell: bash
         run: |
           npm ci --ignore-scripts
+          npm run compile -- --arch=${{ matrix.arch }}
 
           if [ -n "${{ matrix.is-native }}" ]; then
             npm run build
             npm test
           fi
 
-          npm run compile -- --arch=${{ matrix.arch }}
           npx pkg-prebuilds-copy \
             --baseDir build/Release \
             --source $BINDING_NAME.node \
