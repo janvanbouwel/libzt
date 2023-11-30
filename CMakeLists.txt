@@ -820,7 +820,6 @@ if (ZTS_ENABLE_NODEJS)
 
 
     add_library(nodezt SHARED ${NODEJS_SRC_FILES} ${CMAKE_JS_SRC})
-    target_compile_features(nodezt PUBLIC cxx_std_20)
     set_target_properties(nodezt PROPERTIES PREFIX "" SUFFIX ".node")
     target_link_libraries(nodezt ${CMAKE_JS_LIB})
 
