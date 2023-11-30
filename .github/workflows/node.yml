@@ -1,9 +1,10 @@
-name: Prebuild
+
+name: Node.js Build and package
 
 on:
-  workflow_call:
-    # tags:
-    #   - v*
+  push:
+  # release:
+  #   types: [created]
 
 env:
   NAPI_VERSION: 5
@@ -159,3 +160,26 @@ jobs:
           name: all-prebuilds
           path: prebuilds
           retention-days: 7
+
+  publish-npm:
+    needs: bundle
+    defaults:
+      run:
+        working-directory: ${{ env.NODEJS_SRC_DIR }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@v3
+        with:
+          name: all-prebuilds
+          path: ${{ env.NODEJS_SRC_DIR }}/prebuilds
+      - run: npm run build
+      - run: npm test
+      - run: npm publish --dry-run --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
