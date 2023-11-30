@@ -14,8 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: tree -a
-      - uses: ./.github/workflows/node-build.yaml
+      - uses: ./.github/workflows/node-build.yml
 
   publish-npm:
     needs: build
