@@ -1,6 +1,21 @@
 # Nodejs libzt binding
 
-## Building
+## Current features
+
+- Typescript
+- Subset of ZeroTierSockets.h directly accessible
+- non-blocking TCP using lwip callback api (still WIP)
+- Socket and Server for tcp, analogous to nodejs "net" (can be used for tls, http(s))
+- non-blocking UDP using lwip callback api
+- Linux only
+
+## Todo
+
+- Nicer wrapper around Node and Network
+- More features from ZeroTierSockets.h
+- Configure macos and windows (might work already, not tested)
+
+## Building from source
 
 ### Build
 
@@ -33,17 +48,3 @@ node dist/test/newudptest.js
 node dist/test/newtcptest.js
 ```
 
-## Current features
-
-- Typescript
-- Subset of ZeroTierSockets.h directly accessible
-- non-blocking TCP using lwip callback api (still WIP)
-- Socket and Server for tcp, analogous to nodejs "net" (can be used for tls, http(s))
-- non-blocking UDP using lwip callback api
-- Linux only
-
-## Todo
-
-- Nicer wrapper around Node and Network
-- More features from ZeroTierSockets.h
-- Configure macos and windows (might work already, not tested)
