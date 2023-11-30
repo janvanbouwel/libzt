@@ -16,8 +16,8 @@ npm test (TODO)
 ```bash
 cd src/bindings/nodejs
 npm ci --ignore-scripts
-npm run compile-debug   (rerun after changes to native code)
-npm run build-debug     (rerun after changes to typescript)
+npm run compile -- -D   (rerun after changes to native code)
+npm run build           (rerun after changes to typescript)
 npm test (TODO)
 ```
 

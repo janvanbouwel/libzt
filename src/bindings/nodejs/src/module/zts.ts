@@ -59,25 +59,13 @@ type ZTS = {
 }
 
 
-import { Target } from "target-enum";
-
-
-let modulePath = "";
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-if(Target.Current === Target.Release) {
-    modulePath = "../../build/Release/nodezt.node";
-} 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-if(Target.Current === Target.Debug) {
-    modulePath = "../../build-debug/Debug/nodezt.node";
-}
-
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-export const zts = require(modulePath) as ZTS;
+import * as loadBinding from "pkg-prebuilds";
+import * as options from "../binding-options";
+export const zts = loadBinding<ZTS>(
+    // project root
+    `${__dirname}/../..`,
+    options
+);
 
 
 export enum errors {

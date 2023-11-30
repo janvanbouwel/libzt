@@ -1,9 +1,0 @@
-{
-    "extends": "./tsconfig.json",
-    "files": [
-        "src/module/target-debug.d.ts"
-    ],
-    "exclude": [
-        "src/module/target-release.d.ts"
-    ]
-}
