@@ -77,7 +77,6 @@ jobs:
         if: ${{ !matrix.docker-arch }}
         shell: bash
         run: |
-          ls
           npm ci --ignore-scripts
 
           if [ -n "${{ matrix.is-native }}" ]; then
@@ -113,7 +112,7 @@ jobs:
               apk add cmake make g++ gcc
             fi
 
-            cd /work
+            cd /work/src/bindings/nodejs
 
             npm ci --ignore-scripts
             npm test
