@@ -14,9 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - run: tree
       - uses: ./.github/workflows/node-build.yaml
 
   publish-npm:
+    needs: build
     defaults:
       run:
         working-directory: ${{ env.NODEJS_SRC_DIR }}
