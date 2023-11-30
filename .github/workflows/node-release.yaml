@@ -12,8 +12,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-      steps:
-        - uses: ./.github/workflows/node-build.yaml
+    steps:
+      - uses: ./.github/workflows/node-build.yaml
 
   publish-npm:
     defaults:
