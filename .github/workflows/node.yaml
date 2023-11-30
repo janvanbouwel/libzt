@@ -66,6 +66,7 @@ jobs:
       - name: Checkout submodules
         shell: bash
         run: git submodule update --init
+        working-directory: .
 
       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
@@ -76,10 +77,11 @@ jobs:
         if: ${{ !matrix.docker-arch }}
         shell: bash
         run: |
+          ls
           npm ci --ignore-scripts
 
           if [ -n "${{ matrix.is-native }}" ]; then
-            # npm test
+            npm test
           fi
 
           npm run compile -- --arch=${{ matrix.arch }}
@@ -114,7 +116,7 @@ jobs:
             cd /work
 
             npm ci --ignore-scripts
-            # npm test
+            npm test
             npx pkg-prebuilds-copy \
               --baseDir build/Release \
               --source $BINDING_NAME.node \
