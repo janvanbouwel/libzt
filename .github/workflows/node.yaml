@@ -14,6 +14,9 @@ jobs:
   build-and-test:
     name: Build ${{ matrix.arch }} on ${{ matrix.os }} ${{ matrix.libc }}
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./src/bindings/nodejs
 
     strategy:
       fail-fast: false
