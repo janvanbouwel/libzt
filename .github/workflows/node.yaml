@@ -9,6 +9,7 @@ env:
   NAPI_VERSION: 5
   BINDING_NAME: nodezt
   MACOSX_DEPLOYMENT_TARGET: "10.13"
+  NODEJS_SRC_DIR: "src/bindings/nodejs"
 
 jobs:
   build-and-test:
@@ -16,7 +17,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        working-directory: ./src/bindings/nodejs
+        working-directory: ${{ env.NODEJS_SRC_DIR }}
 
     strategy:
       fail-fast: false
@@ -80,6 +81,7 @@ jobs:
           npm ci --ignore-scripts
 
           if [ -n "${{ matrix.is-native }}" ]; then
+            npm run build
             npm test
           fi
 
@@ -114,8 +116,10 @@ jobs:
 
             cd /work/src/bindings/nodejs
 
-            npm ci --ignore-scripts
+            npm ci
+            npm run build
             npm test
+
             npx pkg-prebuilds-copy \
               --baseDir build/Release \
               --source $BINDING_NAME.node \
@@ -129,7 +133,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }}-${{ matrix.arch }}-${{ matrix.libc }}-prebuilds
-          path: prebuilds
+          path: ${{ env.NODEJS_SRC_DIR }}/prebuilds
           retention-days: 1
 
   bundle:
