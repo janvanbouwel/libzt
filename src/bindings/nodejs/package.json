@@ -13,7 +13,8 @@
     "install": "pkg-prebuilds-verify ./dist/binding-options.js || npm run compile",
     "compile": "cmake-js build -p 8",
     "recompile": "npm run rebuild -p 8",
-    "build": "rimraf dist && tsc"
+    "build": "rimraf dist && tsc",
+    "prettier": "npx prettier src --write"
   },
   "author": "",
   "license": "MIT",
