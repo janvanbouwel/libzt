@@ -6,7 +6,6 @@ project(zt-node)
 
 set(LIBZT_ROOT "../../..")
 set(ZTS_ENABLE_NODEJS TRUE)
-set(CMAKE_CXX_STANDARD 20)
 
 set(NODEJS_DIR ${PROJECT_SOURCE_DIR})
 

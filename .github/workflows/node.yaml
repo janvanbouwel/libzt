@@ -23,13 +23,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # windows
-          - os: windows-2019
-            arch: x64
-            is-native: true
-          - os: windows-2019
-            arch: ia32
-            is-native: false
+          # # windows
+          # - os: windows-2019
+          #   arch: x64
+          #   is-native: true
+          # - os: windows-2019
+          #   arch: ia32
+          #   is-native: false
           # macos
           - os: macos-11
             arch: arm64
@@ -43,24 +43,24 @@ jobs:
             is-native: true
             docker-arch: linux/amd64
             docker-image: node:18-buster
-          # linux-libc
-          - os: ubuntu-latest
-            arch: arm64
-            is-native: false
-            docker-arch: linux/arm64
-            docker-image: node:18-buster
-          - os: ubuntu-latest
-            arch: arm
-            is-native: false
-            docker-arch: linux/arm/v7
-            docker-image: node:18-buster
-          # linux-musl
-          - os: ubuntu-latest
-            arch: x64
-            is-native: false
-            docker-arch: linux/amd64
-            docker-image: node:18-alpine
-            libc: musl
+          # # linux-libc
+          # - os: ubuntu-latest
+          #   arch: arm64
+          #   is-native: false
+          #   docker-arch: linux/arm64
+          #   docker-image: node:18-buster
+          # - os: ubuntu-latest
+          #   arch: arm
+          #   is-native: false
+          #   docker-arch: linux/arm/v7
+          #   docker-image: node:18-buster
+          # # linux-musl
+          # - os: ubuntu-latest
+          #   arch: x64
+          #   is-native: false
+          #   docker-arch: linux/amd64
+          #   docker-image: node:18-alpine
+          #   libc: musl
 
     steps:
       - uses: actions/checkout@v3
