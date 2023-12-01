@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 0",
     "install": "pkg-prebuilds-verify ./dist/binding-options.js || npm run compile",
     "compile": "cmake-js build -p 8",
-    "recompile": "npm run rebuild -p 8",
+    "recompile": "cmake-js rebuild -p 8",
     "build": "rimraf dist && tsc",
     "prettier": "npx prettier src --write"
   },
