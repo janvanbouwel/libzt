@@ -16,6 +16,7 @@ declare class Server {
     constructor(onConnection: (error: NativeError | undefined, socket: nativeSocket) => void)
     listen(port: number, address: string, onListening: (error?: NativeError) => void): void
     address(): { port: number, address: string, family: "IPv6" | "IPv4" }
+    close(callback: ()=>void): void
 }
 
 declare class UDP {
