@@ -5,16 +5,24 @@ import { Duplex, PassThrough } from "node:stream";
 
 export class Server extends EventEmitter {
     private listening = false;
+    private closed = false;
     private internal;
-
+    private connAmount = 0;
 
     constructor(options: Record<string, never>, connectionListener?: (socket: Socket) => void) {
         super();
+        this.once("close", ()=>this.connAmount = -1);
         if (connectionListener) this.on("connection", connectionListener);
 
         this.internal = new zts.Server((error, socket) => {
             const s = new Socket({}, socket);
-
+            this.connAmount++;
+            s.once("close", () => {
+                this.connAmount--;
+                if (this.closed && this.connAmount === 0) {
+                    this.emit("close");
+                }
+            });
             process.nextTick(() => this.emit("connection", s));
         });
     }
@@ -32,6 +40,15 @@ export class Server extends EventEmitter {
 
     address() {
         return this.internal.address();
+    }
+
+    close() {
+        if(! this.listening) return;
+        this.listening = false;
+        this.internal.close(() => {
+            this.closed = true;
+            if (this.connAmount === 0) this.emit("close");
+        });
     }
 }
 
@@ -74,20 +91,20 @@ class Socket extends Duplex {
                 // other side closed the connection
                 // console.log("FIN received");
                 this.receiver.end();
-                if(this.readableLength === 0) this.resume();
+                if (this.readableLength === 0) this.resume();
             }
         });
         this.internalEvents.on("sent", (length) => {
             // console.log(`internal has sent ${length}`);
             this.bytesWritten += length;
         });
-        this.internalEvents.on("close", ()=>{
+        this.internalEvents.on("close", () => {
             // TODO: is this actually necessary?
-            console.log("internal socket closed");
+            // console.log("internal socket closed");
         });
         this.internalEvents.on("error", (error) => {
-            // console.log(error);
-            if(!this.emit("error", error)) throw error;
+            console.log(error);
+            if (!this.emit("error", error)) setImmediate(() => { throw error; });
         });
         this.internal.init((event: string, ...args: unknown[]) => this.internalEvents.emit(event, ...args));
 
@@ -147,6 +164,7 @@ class Socket extends Duplex {
     _final(callback: (error?: Error | null | undefined) => void): void {
         // console.log("final called, i.e. shutdown_wr");
         this.internal.shutdown_wr();
+        // TODO: probably should only go to callback once pcb has confirmed close
         callback();
     }
 
