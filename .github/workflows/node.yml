@@ -24,13 +24,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # # windows
-          # - os: windows-2019
-          #   arch: x64
-          #   is-native: true
-          # - os: windows-2019
-          #   arch: ia32
-          #   is-native: false
+          # windows
+          - os: windows-2019
+            arch: x64
+            is-native: true
+          - os: windows-2019
+            arch: ia32
+            is-native: false
           # macos
           - os: macos-11
             arch: arm64
