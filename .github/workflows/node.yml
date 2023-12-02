@@ -53,13 +53,13 @@ jobs:
           #   is-native: false
           #   docker-arch: linux/arm/v7
           #   docker-image: node:18-buster
-          # linux-musl
-          - os: ubuntu-latest
-            arch: x64
-            is-native: false
-            docker-arch: linux/amd64
-            docker-image: node:18-alpine
-            libc: musl
+          # # linux-musl
+          # - os: ubuntu-latest
+          #   arch: x64
+          #   is-native: false
+          #   docker-arch: linux/amd64
+          #   docker-image: node:18-alpine
+          #   libc: musl
 
     steps:
       - uses: actions/checkout@v3
@@ -118,7 +118,7 @@ jobs:
               apk add cmake make g++ gcc
             fi
 
-            cd /work/${{ env.NODEJS_SRC_DIR }}
+            cd /work/src/bindings/nodejs
 
             npm ci
             npm run build
