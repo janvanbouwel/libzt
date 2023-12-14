@@ -114,6 +114,7 @@ CLASS_METHOD_IMPL(Socket, init)
                         { STRING("error"), MAKE_ERROR("TCP error", ERR_FIELD("code", NUMBER(err))).Value() });
                 }
             });
+            thiz->emit.Release();
         });
     });
 
@@ -206,6 +207,7 @@ CLASS(Server)
 
     METHOD(listen);
     METHOD(address);
+    METHOD(close);
 
     tcp_accept_fn acceptCb;
 };
@@ -214,7 +216,11 @@ Napi::FunctionReference* Server::constructor = new Napi::FunctionReference;
 
 CLASS_INIT_IMPL(Server)
 {
-    auto func = CLASS_DEFINE(Server, { CLASS_INSTANCE_METHOD(Server, listen), CLASS_INSTANCE_METHOD(Server, address) });
+    auto func = CLASS_DEFINE(
+        Server,
+        { CLASS_INSTANCE_METHOD(Server, listen),
+          CLASS_INSTANCE_METHOD(Server, address),
+          CLASS_INSTANCE_METHOD(Server, close) });
 
     *Server::constructor = Napi::Persistent(func);
 
@@ -303,6 +309,25 @@ CLASS_METHOD_IMPL(Server, address)
         ADD_FIELD("port", NUMBER(pcb->local_port));
         ADD_FIELD("family", IP_IS_V6(&pcb->local_ip) ? STRING("IPv6") : STRING("IPv4"))
     });
+}
+
+CLASS_METHOD_IMPL(Server, close)
+{
+    NB_ARGS(1);
+    auto cb = ARG_FUNC(0);
+    auto onClose = TSFN_ONCE(cb, "tcpServerClose", {});
+
+    typed_tcpip_callback([=]() {
+        tcp_close(this->pcb);
+        this->pcb = nullptr;
+
+        this->onConnection.Release();
+
+        onClose->BlockingCall();
+        onClose->Release();
+    });
+
+    return VOID;
 }
 
 }   // namespace TCP

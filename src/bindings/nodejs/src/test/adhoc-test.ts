@@ -1,11 +1,9 @@
 import { setTimeout } from "timers/promises";
 
-import { net, startNode, zts } from "../index";
+import { events, net, startNode, zts } from "../index";
 import * as util from "node:util";
 import assert = require("node:assert");
 import { fork } from "node:child_process";
-
-import * as streamConsumers from "node:stream/consumers";
 
 async function test() {
   const payload = "abcdefgh";
@@ -18,8 +16,7 @@ This test starts a server, opens a client in a child process that connects to th
     `);
 
   const log = (...args: unknown[]) => {
-    process.stdout.write(server ? "S:  " : " C: ");
-    console.log(...args);
+    console.log(server ? "S:    " : "   C: ", ...args);
   };
 
   log(`Process started with args: ${process.argv}`);
@@ -27,7 +24,11 @@ This test starts a server, opens a client in a child process that connects to th
   const port = 5000;
 
   startNode(`./id/adhoc-test/${server ? "server" : "client"}`, (event) =>
-    log(`zts event ${event}`),
+    log(
+      `       e: ${event}, ${events[event]
+        .replace("ZTS_EVENT_", "")
+        .toLowerCase()}`,
+    ),
   );
 
   while (!zts.node_is_online()) {
@@ -53,46 +54,58 @@ This test starts a server, opens a client in a child process that connects to th
     log("Starting server");
 
     const server = new net.Server({}, (socket) => {
-      log("Connected");
+      log("socket connected");
       socket.once("data", (data) => {
         log(`Received data: ${data}`);
+        log(`Sending data:  ${data}`);
         socket.end(data);
       });
-      socket.on("error", () => console.log("error"));
+      socket.on("end", () => log("socket ended"));
+      socket.on("error", () => log("socket error"));
     });
     server.listen(port, "::", () => {
       log(`Listening, address: ${util.format(server.address())}`);
     });
 
-    server.on("error", (err) =>
-      assert(false, `Server errored: ${util.format(err)}`),
-    );
+    // server.on("error", (err)=>assert(false, `Server errored: ${util.format(err)}`));
 
     const child = fork(__filename, [address]);
     child.on("exit", async (code) => {
       log(`Client exited with code ${code}`);
       assert.strictEqual(code, 0);
+
+      server.on("close", () => {
+        log("closed server");
+        zts.node_free();
+        log("freed node");
+      });
       await setTimeout(500);
-      // server.close();
-      log("closed server");
-      zts.node_free();
-      log("freed node");
+      server.close();
     });
   } else {
     const address = process.argv[2];
     log(`Connecting to: ${address}`);
     const s = net.connect(port, address, () => {
       log("Connected");
-      s.end(Buffer.from(payload));
+      s.write(Buffer.from(payload));
+
+      let result = "";
+      s.on("data", (data) => (result += data.toString()));
+      s.on("end", () => {
+        log(`Received data: ${result}`);
+        assert.strictEqual(result, payload);
+      });
+
+      s.on("close", async () => {
+        setTimeout(500);
+        log("socket closed, freeing node and hopefully exiting");
+        zts.node_free();
+      });
     });
 
-    const result = await streamConsumers.text(s);
-
-    assert.strictEqual(result, payload);
-
-    s.destroy();
-    zts.node_free();
-    log("Exiting");
+    s.on("error", (err) => {
+      assert(false, err);
+    });
   }
 }
 

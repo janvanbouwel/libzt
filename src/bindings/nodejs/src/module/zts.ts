@@ -29,6 +29,7 @@ declare class Server {
     onListening: (error?: NativeError) => void,
   ): void;
   address(): { port: number; address: string; family: "IPv6" | "IPv4" };
+  close(callback: () => void): void;
 }
 
 declare class UDP {
