@@ -1,3 +1,7 @@
 declare module "target-enum" {
-    export const enum Target { Release, Debug, Current = Debug }
+  export const enum Target {
+    Release,
+    Debug,
+    Current = Debug,
+  }
 }

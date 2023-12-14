@@ -1,4 +1,3 @@
-
 // Socket protocol types
 /** Stream socket */
 export const ZTS_SOCK_STREAM = 0x00000001;
@@ -40,10 +39,10 @@ export const ZTS_SHUT_RD = 0x00000000;
 export const ZTS_SHUT_WR = 0x00000001;
 export const ZTS_SHUT_RDWR = 0x00000002;
 // ioctl() commands
-export const ZTS_FIONREAD = 0x4008667F;
-export const ZTS_FIONBIO = 0x8008667E;
+export const ZTS_FIONREAD = 0x4008667f;
+export const ZTS_FIONBIO = 0x8008667e;
 // Socket level option number
-export const ZTS_SOL_SOCKET = 0x00000FFF;
+export const ZTS_SOL_SOCKET = 0x00000fff;
 // Socket options
 export const ZTS_SO_REUSEADDR = 0x00000004;
 export const ZTS_SO_KEEPALIVE = 0x00000008;
@@ -79,66 +78,65 @@ export const ZTS_TCP_KEEPIDLE = 0x00000003;
 export const ZTS_TCP_KEEPINTVL = 0x00000004;
 export const ZTS_TCP_KEEPCNT = 0x00000005;
 
-
 //----------------------------------------------------------------------------//
 // Misc definitions                                                           //
 //----------------------------------------------------------------------------//
 
 /**
-     * Length of human-readable MAC address string
-     */
+ * Length of human-readable MAC address string
+ */
 export const ZTS_MAC_ADDRSTRLEN = 18;
 
 /**
-     * Max length of human-readable IPv4 string
-     */
+ * Max length of human-readable IPv4 string
+ */
 export const ZTS_INET_ADDRSTRLEN = 16;
 
 /**
-     * Max length of human-readable IPv6 string
-     */
+ * Max length of human-readable IPv6 string
+ */
 export const ZTS_INET6_ADDRSTRLEN = 46;
 
 /**
-     * Maximum (and required) length of string buffers used to receive
-     * string-format IP addresses from the API. This is set to `ZTS_INET6_ADDRSTRLEN`
-     * to handle all cases: `ZTS_AF_INET` and `ZTS_AF_INET6`
-     */
+ * Maximum (and required) length of string buffers used to receive
+ * string-format IP addresses from the API. This is set to `ZTS_INET6_ADDRSTRLEN`
+ * to handle all cases: `ZTS_AF_INET` and `ZTS_AF_INET6`
+ */
 export const ZTS_IP_MAX_STR_LEN = 46;
 
 /**
-     * Required buffer length to safely receive data store items
-     */
+ * Required buffer length to safely receive data store items
+ */
 export const ZTS_STORE_DATA_LEN = 4096;
 
 /**
-     * Maximum length of network short name
-     */
+ * Maximum length of network short name
+ */
 export const ZTS_MAX_NETWORK_SHORT_NAME_LENGTH = 127;
 
 /**
-     * Maximum number of pushed routes on a network
-     */
+ * Maximum number of pushed routes on a network
+ */
 export const ZTS_MAX_NETWORK_ROUTES = 32;
 
 /**
-     * Maximum number of statically assigned IP addresses per network endpoint
-     * using ZT address management (not DHCP)
-     */
+ * Maximum number of statically assigned IP addresses per network endpoint
+ * using ZT address management (not DHCP)
+ */
 export const ZTS_MAX_ASSIGNED_ADDRESSES = 16;
 
 /**
-     * Maximum number of direct network paths to a given peer
-     */
+ * Maximum number of direct network paths to a given peer
+ */
 export const ZTS_MAX_PEER_NETWORK_PATHS = 64;
 
 /**
-     * Maximum number of multicast groups a device / network interface can be
-     * subscribed to at once
-     */
+ * Maximum number of multicast groups a device / network interface can be
+ * subscribed to at once
+ */
 export const ZTS_MAX_MULTICAST_SUBSCRIPTIONS = 1024;
 
 /**
-     * The length of a human-friendly identity key pair string
-     */
+ * The length of a human-friendly identity key pair string
+ */
 export const ZTS_ID_STR_BUF_LEN = 384;
