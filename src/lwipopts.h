@@ -78,6 +78,8 @@
 #define LWIP_NETIF_EXT_STATUS_CALLBACK  0
 #define LWIP_NETIF_LINK_CALLBACK        0
 #define LWIP_NETIF_REMOVE_CALLBACK      0
+// netconn
+#define LWIP_NETCONN_FULLDUPLEX         1
 
 /*------------------------------------------------------------------------------
 ------------------------------------ Presets -----------------------------------
@@ -119,8 +121,6 @@
 #define TCPIP_MBOX_SIZE                 0
 #define LWIP_TCPIP_CORE_LOCKING         1
 #define LWIP_TCPIP_CORE_LOCKING_INPUT   1
-// netconn
-#define LWIP_NETCONN_FULLDUPLEX         0
 // netif
 #define LWIP_SINGLE_NETIF               0
 #define LWIP_NETIF_HWADDRHINT           1
